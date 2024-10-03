@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.adyen.android.assignment.api.PlanetaryService
 import com.adyen.android.assignment.api.model.AstronomyPicture
+import com.adyen.android.assignment.network.NasaRepository
+import com.adyen.android.assignment.network.Resource
 import com.adyen.android.assignment.ui.dialogs.ReorderOption
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,29 +28,36 @@ sealed interface AstronomyUiState {
 
 class AstronomyViewModel : ViewModel() {
 
+    private val nasaRepository by lazy {
+        NasaRepository(PlanetaryService.instance)
+    }
+
     // Expose screen UI state
     private val _uiState = MutableStateFlow<AstronomyUiState>(AstronomyUiState.Loading)
     val uiState: StateFlow<AstronomyUiState> = _uiState.asStateFlow()
 
     private var originalList: List<AstronomyPicture> = emptyList()
+    private var currentSelection = ReorderOption.BY_TITLE
 
     init {
         fetchList()
     }
 
-    private fun fetchList() {
+    fun fetchList() {
         viewModelScope.launch(Dispatchers.IO) {
-            val response = PlanetaryService.instance.getPictures()
-            val list = response.body()
-            if (response.isSuccessful && list != null) {
-                val state = if (list.isNotEmpty()) {
+
+            val result = nasaRepository.getPictures()
+            if (result is Resource.Success) {
+                val list = result.data
+                if (list?.isNotEmpty() == true) {
                     originalList = list
-                    AstronomyUiState.Topics(list)
+                    _uiState.update {
+                        AstronomyUiState.Topics(list)
+                    }
                 } else {
-                    AstronomyUiState.Empty
-                }
-                _uiState.update {
-                    state
+                    _uiState.update {
+                        AstronomyUiState.Empty
+                    }
                 }
             } else {
                 _uiState.update {
@@ -59,6 +68,7 @@ class AstronomyViewModel : ViewModel() {
     }
 
     fun sort(reorderOption: ReorderOption) {
+        currentSelection = reorderOption
         val list = (_uiState.value as? AstronomyUiState.Topics)?.list.orEmpty()
         if (list.isNotEmpty()) {
             if (reorderOption == ReorderOption.BY_TITLE) {
@@ -70,7 +80,7 @@ class AstronomyViewModel : ViewModel() {
             }
 
             if (reorderOption == ReorderOption.BY_DATE) {
-                val sorted = list.sortedBy { it.date }
+                val sorted = list.sortedByDescending { it.date }
                 _uiState.update {
                     AstronomyUiState.Topics(sorted)
                 }
@@ -83,5 +93,9 @@ class AstronomyViewModel : ViewModel() {
                 }
             }
         }
+    }
+
+    fun currentSelection(): ReorderOption {
+        return currentSelection
     }
 }

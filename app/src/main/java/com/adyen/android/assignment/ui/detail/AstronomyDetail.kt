@@ -1,5 +1,15 @@
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
@@ -37,14 +47,11 @@ fun AstronomyDetailScreen(
         ) {
             // Async Image
             AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(astronomyPicture.hdUrl)
-                    .crossfade(true)
-                    .build(),
+                model = ImageRequest.Builder(LocalContext.current).data(astronomyPicture.hdUrl)
+                    .crossfade(true).build(),
                 contentDescription = "Astronomy Picture",
                 contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .fillMaxSize()
+                modifier = Modifier.fillMaxSize()
             )
 
         }
@@ -65,16 +72,14 @@ fun AstronomyDetailScreen(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
                     .fillMaxSize()
-                    .padding(16.dp),
-                verticalArrangement = Arrangement.SpaceBetween
+                    .padding(16.dp), verticalArrangement = Arrangement.SpaceBetween
             ) {
 
                 Spacer(modifier = Modifier.height(150.dp)) // To push the content below the image
 
                 // Main content (Title and description)
                 Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.Start
+                    modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.Start
                 ) {
                     Text(
                         text = astronomyPicture.title,
@@ -90,9 +95,7 @@ fun AstronomyDetailScreen(
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Text(
-                        text = astronomyPicture.explanation,
-                        fontSize = 16.sp,
-                        color = Color.White
+                        text = astronomyPicture.explanation, fontSize = 16.sp, color = Color.White
                     )
                 }
 
@@ -114,9 +117,7 @@ fun AstronomyDetailScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "It's warped.",
-                            color = Color.White,
-                            fontSize = 16.sp
+                            text = "It's warped.", color = Color.White, fontSize = 16.sp
                         )
                     }
 
@@ -131,9 +132,7 @@ fun AstronomyDetailScreen(
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         Text(
-                            text = "Over 200 billion stars.",
-                            color = Color.White,
-                            fontSize = 16.sp
+                            text = "Over 200 billion stars.", color = Color.White, fontSize = 16.sp
                         )
                     }
 

@@ -4,7 +4,6 @@ import com.squareup.moshi.FromJson
 import com.squareup.moshi.ToJson
 import java.time.LocalDate
 
-
 class DayAdapter {
     @ToJson
     fun toJson(date: LocalDate): String = date.toString()

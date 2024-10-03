@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import com.adyen.android.assignment.ui.ui.theme.AssignmentTheme
 
-
 class AstronomyActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {

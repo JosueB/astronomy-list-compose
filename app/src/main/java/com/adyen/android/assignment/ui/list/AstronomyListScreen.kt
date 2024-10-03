@@ -1,36 +1,40 @@
 package com.adyen.android.assignment.ui.list
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.*
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.adyen.android.assignment.R
 import com.adyen.android.assignment.api.model.AstronomyPicture
 import com.adyen.android.assignment.ui.AstronomyUiState
 import com.adyen.android.assignment.ui.dialogs.ReorderDialog
 import com.adyen.android.assignment.ui.dialogs.ReorderOption
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AstronomyListScreen(
     state: AstronomyUiState,
+    currentSelection: ReorderOption,
     showDialog: Boolean,
     onItemClicked: (pic: AstronomyPicture) -> Unit,
     onFabClicked: () -> Unit,
     onDismissDialog: () -> Unit,
+    refreshCall: () -> Unit,
     onSelection: (ReorderOption) -> Unit
 ) {
     Scaffold(
@@ -41,8 +45,8 @@ fun AstronomyListScreen(
 
         if (showDialog) {
             ReorderDialog(
-                currentSelection = ReorderOption.BY_DATE,
-                onDismissRequest = {  },
+                currentSelection = currentSelection,
+                onDismissRequest = { },
                 onSelect = { option ->
                     onSelection(option)
                 }
@@ -61,21 +65,30 @@ fun AstronomyListScreen(
                     }
                 }
             }
+
             is AstronomyUiState.Empty -> {
                 // Handle Empty State
             }
+
             is AstronomyUiState.Loading -> {
                 // Handle Loading State
             }
+
             else -> {
-                GenericMessageScreen({})
+                GenericMessageScreen() {
+                    refreshCall()
+                }
             }
         }
     }
 }
 
 @Composable
-fun ListItemRow(picture: AstronomyPicture, modifier: Modifier = Modifier, onItemClicked: () -> Unit) {
+fun ListItemRow(
+    picture: AstronomyPicture,
+    modifier: Modifier = Modifier,
+    onItemClicked: () -> Unit
+) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -88,7 +101,6 @@ fun ListItemRow(picture: AstronomyPicture, modifier: Modifier = Modifier, onItem
                 .data(picture.url)
                 .crossfade(true)
                 .build(),
-            placeholder = painterResource(R.drawable.ic_favorite_filled),
             contentDescription = "image",
             contentScale = ContentScale.Crop,
             modifier = Modifier

@@ -10,7 +10,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
 
-
 interface PlanetaryService {
     /**
      * APOD - Astronomy Picture of the day.
