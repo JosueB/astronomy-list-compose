@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -14,8 +17,22 @@ android {
         versionCode = 1
         versionName = "1.0"
 
-        buildConfigField("String", "NASA_BASE_URL", "\"https://api.nasa.gov\"")
-        buildConfigField("String", "API_KEY", "")
+
+        // Define the path to the secrets file
+        val secretsFile = file("${rootDir}/secrets.properties")
+        if (secretsFile.exists()) {
+            // Load the properties from the secrets file
+            val properties = Properties()
+            FileInputStream(secretsFile).use { fileInputStream ->
+                properties.load(fileInputStream)
+            }
+
+            buildConfigField("String", "NASA_BASE_URL", "\"https://api.nasa.gov\"")
+            buildConfigField("String", "API_KEY", "\"${properties["API_KEY"]}\"")
+        } else {
+            // Throw an exception if the secrets file is not found
+            throw GradleException("Missing secrets.properties file. Please ensure it exists in the project root directory and put your API_KEY key there")
+        }
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {

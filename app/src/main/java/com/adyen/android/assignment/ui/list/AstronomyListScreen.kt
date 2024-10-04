@@ -39,7 +39,9 @@ fun AstronomyListScreen(
 ) {
     Scaffold(
         floatingActionButton = {
-            ReorderListFab(onClick = onFabClicked) // FAB composable with the action passed
+            if (state is AstronomyUiState.Topics) {
+                ReorderListFab(onClick = onFabClicked) // FAB composable with the action passed
+            }
         }
     ) {
 

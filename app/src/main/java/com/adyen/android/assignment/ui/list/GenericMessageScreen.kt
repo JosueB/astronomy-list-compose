@@ -32,8 +32,7 @@ fun GenericMessageScreen(
     // Use a Box to center the content
     Box(
         modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black), // Background color (can also use MaterialTheme.colorScheme.background for dark mode handling)
+            .fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
         Column(
@@ -45,10 +44,10 @@ fun GenericMessageScreen(
             Icon(
                 painter = painterResource(id = R.drawable.ic_vector), // Update with your own vector drawable
                 contentDescription = "Error Icon",
+                tint = Color.Red,
                 modifier = Modifier
                     .size(150.dp)
                     .padding(bottom = 24.dp), // Adjust size and padding
-                tint = Color(0xFF7209B7) // Purple color for the icon (use Material3's color scheme if needed)
             )
             Spacer(modifier = Modifier.padding(30.dp))
 
@@ -72,7 +71,6 @@ fun GenericMessageScreen(
             // Refresh button using Material 3 Button
             Button(
                 onClick = onRefreshClick,
-                colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF7209B7)), // Purple color for the button
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(text = "Refresh", color = Color.White, fontSize = 16.sp)
